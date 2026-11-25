@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Keeping the What-If: a record demo</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;line-height:1.5;color:#111}
+canvas{border:1px solid #999;width:100%;height:320px;background:#eef6ff}
+label{display:block;margin:12px 0 4px}
+input[type=range]{width:100%}
+pre{background:#f4f4f4;padding:12px;overflow:auto}
+button{padding:8px 14px;margin:6px 6px 6px 0}
+.small{color:#555;font-size:14px}
+</style>
+</head>
+<body>
+<h1>Keeping the What-If: a record demo</h1>
+<p>By Darren Hall. A record for counterfactual world models, in reply to Balestriero, LeCun, and Varaku, arXiv:2611.24778.</p>
+<p class="small">Toy world, same dynamics as simulator.py. True dynamics: z' = z + a * s(z) + d, s = 1 + 0.4 sin(x) + 0.3 cos(y). Model mu(z,a) = z + a. Disturbance d is a hidden current, drawn per transition. Ground truth is shown here for teaching only. The agent never sees d.</p>
+<p class="small">Results from simulator.py, seed 20261125, n=2000. Holding test, R2 on the change: factual only 0.448, corrected immediately 0.913, corrected later from the record 0.913, wrong predictor version 0.657. Chaining test: chained record 60.7 percent reach the goal, naive model only 11.8 percent, one-step hindsight 65.8 percent. Full numbers in results.json, method and limits in REPORT.md. This is a toy simulation, not the paper's simulators.</p>
+<canvas id="c" width="880" height="320"></canvas>
+<p>
+<button id="newEvent">New event</button>
+<button id="askNow">Ask what-if now</button>
+<button id="askLater">Ask what-if later, from record</button>
+<button id="askFactual">Factual only, no record</button>
+</p>
+<label>Alternative action, x: <span id="axv">0.5</span> <input type="range" id="ax" min="-1" max="1" step="0.1" value="0.5"></label>
+<label>Alternative action, y: <span id="ayv">0.5</span> <input type="range" id="ay" min="-1" max="1" step="0.1" value="0.5"></label>
+<h2>Result</h2>
+<pre id="out">Press New event, then ask a what-if.</pre>
+<h2>Record, append only</h2>
+<pre id="rec">No entries yet.</pre>
+<p class="small">Code and report: <a href="https://github.com/iamvolshi/lecun-counterfactual-demo">github.com/iamvolshi/lecun-counterfactual-demo</a></p>
+<script>
+let z=[0,0], a=[0.6,-0.4], d=[0,0], zobs=[0,0], rec=[], prev="genesis";
+function sOf(p){ return 1 + 0.4*Math.sin(p[0]) + 0.3*Math.cos(p[1]); }
+function trueStep(p, act, dist){ const s=sOf(p); return [p[0]+act[0]*s+dist[0], p[1]+act[1]*s+dist[1]]; }
+function mu(p, act){ return [p[0]+act[0], p[1]+act[1]]; }
+async function hash(s){ const b=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("").slice(0,12); }
+function draw(cf){
+  const cv=document.getElementById("c"), ctx=cv.getContext("2d");
+  ctx.clearRect(0,0,880,320);
+  const X=p=>440+p[0]*80, Y=p=>160-p[1]*80;
+  function dot(p, col, label){ ctx.fillStyle=col; ctx.beginPath(); ctx.arc(X(p),Y(p),8,0,7); ctx.fill(); ctx.fillStyle="#111"; ctx.fillText(label, X(p)+12, Y(p)+4); }
+  dot(z, "#111", "start z");
+  dot(zobs, "#0a7", "observed z'");
+  if(cf) dot(cf, "#c00", "counterfactual");
+  ctx.fillStyle="#111"; ctx.fillText("current d (hidden from agent, shown for teaching): "+d.map(v=>v.toFixed(2)).join(", "), 12, 300);
+}
+async function newEvent(){
+  z=[(Math.random()*4-2),(Math.random()*4-2)];
+  a=[(Math.random()*2-1),(Math.random()*2-1)];
+  d=[(Math.random()+Math.random()+Math.random()-1.5)*0.7, (Math.random()+Math.random()+Math.random()-1.5)*0.7];
+  zobs=trueStep(z,a,d);
+  const m=mu(z,a);
+  const entry={z:z, a:a, mu:m, version:"v1", z_obs:zobs, residual:[zobs[0]-m[0], zobs[1]-m[1]]};
+  const h=await hash(prev+JSON.stringify(entry));
+  rec.push({entry:entry, hash:h, prev:prev}); prev=h;
+  document.getElementById("rec").textContent = rec.map((r,i)=> (i+1)+". hash "+r.hash+" prev "+r.prev.slice(0,12)+" z "+JSON.stringify(r.entry.z.map(v=>+v.toFixed(2)))+" a "+JSON.stringify(r.entry.a.map(v=>+v.toFixed(2)))+" residual "+JSON.stringify(r.entry.residual.map(v=>+v.toFixed(2)))).join("\n");
+  document.getElementById("out").textContent = "Event recorded. Observed outcome z' = "+zobs.map(v=>v.toFixed(2)).join(", ")+". Residual = "+entry.residual.map(v=>v.toFixed(2)).join(", ")+". Now ask a what-if.";
+  draw(null);
+}
+function alt(){ return [parseFloat(document.getElementById("ax").value), parseFloat(document.getElementById("ay").value)]; }
+function ask(mode){
+  if(!rec.length){ document.getElementById("out").textContent="Press New event first."; return; }
+  const ap=alt();
+  const e=rec[rec.length-1].entry;
+  let cf, label;
+  if(mode==="factual"){
+    cf=mu(e.z, ap); label="Factual only, no record. mu(z, a'). No disturbance, no residual.";
+  } else {
+    const m=mu(e.z, e.a), mp=mu(e.z, ap);
+    cf=[e.z_obs[0]+mp[0]-m[0], e.z_obs[1]+mp[1]-m[1]];
+    label = mode==="now" ? "Corrected now. z_obs + mu(z,a') - mu(z,a)." : "Corrected later, from record. Same stored z, same stored version v1. Same answer as now, if the record held it.";
+  }
+  const truth=trueStep(e.z, ap, d);
+  const err=Math.hypot(cf[0]-truth[0], cf[1]-truth[1]);
+  document.getElementById("out").textContent = label+"\nPredicted counterfactual: "+cf.map(v=>v.toFixed(2)).join(", ")+"\nTrue counterfactual (simulator ground truth, teaching only): "+truth.map(v=>v.toFixed(2)).join(", ")+"\nError: "+err.toFixed(3);
+  draw(cf);
+}
+document.getElementById("ax").oninput=e=>document.getElementById("axv").textContent=e.target.value;
+document.getElementById("ay").oninput=e=>document.getElementById("ayv").textContent=e.target.value;
+document.getElementById("newEvent").onclick=newEvent;
+document.getElementById("askNow").onclick=()=>ask("now");
+document.getElementById("askLater").onclick=()=>ask("later");
+document.getElementById("askFactual").onclick=()=>ask("factual");
+draw(null);
+</script>
+</body>
+</html>

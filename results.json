@@ -1,0 +1,20 @@
+{
+  "holding": {
+    "n": 2000,
+    "note": "R2 on the change z_cf - z, not absolute position",
+    "factual_only_R2": 0.44793727509815173,
+    "corrected_immediate_R2": 0.9127902544911809,
+    "corrected_later_from_record_R2": 0.9127902544911809,
+    "corrected_wrong_predictor_version_R2": 0.6569316352811951,
+    "record_entries": 2000
+  },
+  "chaining": {
+    "n": 2000,
+    "goal_radius": 0.35,
+    "chained_record_success_rate": 0.6065,
+    "naive_mu_only_success_rate": 0.118,
+    "one_step_hindsight_success_rate": 0.658,
+    "record_entries": 4000
+  },
+  "seed": 20261125
+}
