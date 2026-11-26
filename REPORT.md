@@ -8,7 +8,7 @@ Repo: https://github.com/iamvolshi/lecun-counterfactual-demo
 
 ## What was proven
 
-Both tests from Section 4 of the supplement, `lecun-counterfactual-supplement-draft.md`.
+Both tests from Sections 2 and 5 of the supplement, `lecun-counterfactual-supplement-draft.md`.
 
 ### 1. Holding test
 
@@ -44,11 +44,10 @@ n = 2000 events, goal radius 0.35, 60 candidate actions searched.
 - Naive, mu only, disturbances ignored: 11.8 percent
 - One-step hindsight, for comparison: 65.8 percent
 
-Chaining works, and it beats naive by a lot. It does not beat one-step,
-and it does not compound in the good direction. It degrades a little
-against one-step, 60.7 vs 65.8, as the draft expected. The record is
-still useful for one-step what-ifs asked later and for audit, but
-chaining is not a free win.
+Chaining beats naive, 60.7 vs 11.8. It does not beat one-step,
+65.8, and it does not compound. The record is still useful for
+one-step what-ifs asked later and for audit, but chaining is not
+a free win.
 
 ## What this does not prove
 
@@ -63,9 +62,9 @@ chaining is not a free win.
   A better v2 would improve the answer, not degrade it. The point is
   attribution, not that old is always better.
 
-## The gain, in distance, not R2
+## The gain, in percent
 
-One typical event, event 14, seed 20261125. Start (1.41, 0.12).
+Event 14, seed 20261125. Start (1.41, 0.12).
 True what-if outcome (1.06, 1.77).
 - Factual, no record: (1.53, 0.82), misses by 1.07 units.
 - Corrected, with record: (1.11, 1.59), misses by 0.19 units.
@@ -78,7 +77,7 @@ Across all 2000 events:
 Chaining, out of 100 tries:
 - Naive: 12 percent reach the goal.
 - Chained with record: 61 percent reach the goal. Gain: 408% improvement.
-- One-step: 66 percent reach the goal. Chaining does not beat one-step.
+- One-step: 66 percent reach the goal.
 
 ## KT v2: run it by trust level
 
@@ -102,12 +101,10 @@ Chaining test, n=2000, goal radius 0.35:
 - Naive, mu only: 12.6 percent
 - One-step hindsight: 66.0 percent
 
-Slow is worse for this specific event, and that is the honest KT
-split. Slow replaces the actual disturbance for this event with the
-regional mean, so it loses the exact residual the hindsight question
-needs. Fast is for this event, slow is for the domain, for new events
-in a known region. Do not claim slow beats fast on hindsight. It does
-not here, and the numbers show it.
+Slow is worse for hindsight on a specific event. Slow replaces the
+actual disturbance for this event with the regional mean, so it loses
+the exact residual the hindsight question needs. Fast is for this
+event, slow is for the domain, for new events in a known region.
 
 ## Files
 
