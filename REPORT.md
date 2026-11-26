@@ -69,15 +69,15 @@ One typical event, event 14, seed 20261125. Start (1.41, 0.12).
 True what-if outcome (1.06, 1.77).
 - Factual, no record: (1.53, 0.82), misses by 1.07 units.
 - Corrected, with record: (1.11, 1.59), misses by 0.19 units.
-- Gain: 82.6 percent closer.
+- Gain: 82.6% improvement.
 
 Across all 2000 events:
-- Mean miss: factual 0.94 units, corrected 0.32 units, gain 65.9 percent closer.
-- Median miss: factual 0.88 units, corrected 0.24 units, gain 72.7 percent closer.
+- Mean miss: factual 0.94 units, corrected 0.32 units, gain 65.9% improvement.
+- Median miss: factual 0.88 units, corrected 0.24 units, gain 72.7% improvement.
 
 Chaining, out of 100 tries:
 - Naive: 12 percent reach the goal.
-- Chained with record: 61 percent reach the goal. Gain: 49 percentage points, 408 percent more goals reached.
+- Chained with record: 61 percent reach the goal. Gain: 408% improvement.
 - One-step: 66 percent reach the goal. Chaining does not beat one-step.
 
 ## KT v2: run it by trust level
