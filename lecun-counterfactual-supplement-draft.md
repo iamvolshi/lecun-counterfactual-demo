@@ -1,11 +1,11 @@
 # Keeping the What-If: A Record for Counterfactual World Models
 
 Darren Hall
-November 25, 2026
+November 26, 2026
 
 ## Abstract
 
-This note is built around its findings. A record that holds the observed outcome lets an agent ask a what-if later, and the gain is measured in percent. One event: 82.6% improvement. Mean across 2000 events: 65.9% improvement. Chaining across two steps: 408% improvement in goals reached. From WILD to MATURE trust: 264% improvement. The rest of this note explains the record that produced those numbers, and the limits that still apply to them.
+This note is built around its findings. A record that holds the observed outcome lets an agent ask a what-if later, and the gain is measured in percent. One event: 82.6% improvement. Mean across 2000 events: 65.9% improvement. Chaining across two steps: 408% improvement in goals reached. From WILD to MATURE trust: 264% improvement. A retest measures slow after fast's authority collapses: slow holds at 0.696 while fast cannot answer. The rest of this note explains the record that produced those numbers, and the limits that still apply to them.
 
 A world model trained only on what did happen cannot answer what would have happened under a different action, whatever its data or capacity. Balestriero, LeCun, and Varaku solve the one-step version of that problem [1]. This note does not correct their paper. It asks a separate question: what does an agent need in order to ask that what-if later, after the step is over, for hindsight planning, debugging, and audit? The proposal here is a record as one way to hold the observed outcome for later use, not the only way, and not a way the paper itself needs.
 
@@ -31,9 +31,9 @@ Across all 2000 events, mean miss: factual 0.94 units, corrected 0.32 units. Gai
 
 Holding test: ask the what-if later, from the record, versus immediately. Corrected R2 on the change: factual only 0.448, corrected immediately 0.913, corrected later from the record 0.913. The later answer is identical to the immediate answer. The record held what was needed, with no loss.
 
-Trust levels, same 2000 events, run again as if every entry were at that level. Holding R2: WILD 0.241, CANDIDATE 0.716, MATURE fast 0.877, MATURE slow 0.698, REVOKED 0.516, REVOKED gated: cannot-answer, no wrong answer. Gain from WILD to MATURE fast: 264% improvement.
+Trust levels, same 2000 events, run again as if every entry were at that level. Holding R2: WILD 0.241, CANDIDATE 0.716, MATURE fast 0.877, MATURE slow 0.698, REVOKED 0.516, REVOKED gated: cannot-answer, no wrong answer. Gain from WILD to MATURE fast: 264% improvement. Those numbers are measured immediately, right after the event. A retest measures them again after fast's authority collapses. The predictor version advances from v1 to v2, which revokes fast's single-visit entries. The world returns to baseline and slow holds the record for 600 more ticks. Measured after that: MATURE slow 0.696, MATURE fast cannot-answer, MATURE fast forced under v2 0.516. Slow sits 34.9% above forced fast. Fast loses 0.361 R2 points to the collapse, 41.2% of its immediate number. That loss is the scar, measured after the return to baseline. The limit: slow's number rests on the record holding the stored predictor version. Forced through the live v2 predictor, slow drops to 0.333.
 
-Chaining test: two steps, goal at step 2. Naive plan reaches the goal 12 percent of the time. Chained plan, with the record, reaches it 61 percent of the time. Gain: 408% improvement. One-step hindsight reaches it 66 percent of the time, so chaining does not beat one-step. Slow chain, MATURE, reaches it 23.8 percent of the time. Slow is worse for hindsight on a specific event, because it replaces the actual disturbance with the regional mean. Fast is for this event, slow is for the domain.
+Chaining test: two steps, goal at step 2. Naive plan reaches the goal 12 percent of the time. Chained plan, with the record, reaches it 61 percent of the time. Gain: 408% improvement. One-step hindsight reaches it 66 percent of the time, so chaining does not beat one-step. Slow chain, MATURE, reaches it 23.8 percent of the time. Measured immediately, slow is worse for hindsight on a specific event, because it replaces the actual disturbance with the regional mean. That ranking holds only for the immediate measurement. After fast's authority collapses, slow is the one still standing: 0.696 against fast's cannot-answer. Fast is for this event, slow is for the domain.
 
 ## 3. What the paper does not try to do
 

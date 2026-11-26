@@ -1,0 +1,49 @@
+{
+  "design": {
+    "seed": 20261125,
+    "n_events": 2000,
+    "hold_ticks": 600,
+    "collapse": "predictor version v1 -> v2; fast (single-visit) entries revoked, slow (consolidated cell-mean) entries kept",
+    "measurement": "hindsight R2 on the change, same 2000 events, asked after the collapse, return to baseline, and 600-tick hold",
+    "scar_definition": "immediate fast R2 minus forced fast R2 under v2 (what collapsed authority costs)"
+  },
+  "immediate_reproduction": {
+    "MATURE_FAST": 0.8769442379748639,
+    "MATURE_SLOW": 0.6979076680679668
+  },
+  "after_collapse_baseline_and_hold": {
+    "MATURE_SLOW_stored_v1": 0.6958271106611853,
+    "MATURE_SLOW_live_v2_reference": 0.33305616697435936,
+    "MATURE_FAST": null,
+    "MATURE_FAST_note": "cannot-answer: fast entries revoked at the collapse, no fast record kept during the hold",
+    "MATURE_FAST_forced_v2_reference": 0.5159181012472076,
+    "MATURE_FAST_forced_v1_sanity": 0.8769442379748639
+  },
+  "scar": {
+    "fast_R2_lost_to_collapse": 0.36102613672765627,
+    "fast_immediate_R2": 0.8769442379748639,
+    "fast_forced_after_collapse_R2": 0.5159181012472076
+  },
+  "consolidation": {
+    "cells": 16,
+    "visits_per_cell_after_hold": {
+      "(1, -2)": 185,
+      "(-2, 1)": 154,
+      "(0, 0)": 148,
+      "(-1, 1)": 158,
+      "(1, -1)": 172,
+      "(-2, -1)": 144,
+      "(-2, 0)": 170,
+      "(0, -1)": 180,
+      "(-1, -1)": 159,
+      "(0, 1)": 171,
+      "(-2, -2)": 166,
+      "(1, 1)": 166,
+      "(1, 0)": 167,
+      "(-1, 0)": 159,
+      "(0, -2)": 141,
+      "(-1, -2)": 160
+    },
+    "total_visits": 2600
+  }
+}
