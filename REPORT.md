@@ -63,6 +63,23 @@ chaining is not a free win.
   A better v2 would improve the answer, not degrade it. The point is
   attribution, not that old is always better.
 
+## The gain, in distance, not R2
+
+One typical event, event 14, seed 20261125. Start (1.41, 0.12).
+True what-if outcome (1.06, 1.77).
+- Factual, no record: (1.53, 0.82), misses by 1.07 units.
+- Corrected, with record: (1.11, 1.59), misses by 0.19 units.
+- Gain: 0.88 units closer, 82.6 percent closer.
+
+Across all 2000 events:
+- Mean miss: factual 0.94 units, corrected 0.32 units, gain 0.62 units, 65.9 percent closer.
+- Median miss: factual 0.88 units, corrected 0.24 units.
+
+Chaining, out of 100 tries:
+- Naive: 12 reach the goal.
+- Chained with record: 61 reach the goal. Gain: 49 more.
+- One-step: 66 reach the goal. Chaining does not beat one-step.
+
 ## KT v2: run it by trust level
 
 Same 2000 events, run again as if every entry were at that level.
