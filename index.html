@@ -23,11 +23,11 @@ button{padding:8px 14px;margin:6px 6px 6px 0}
 <p>True what-if outcome, where it would have ended up: <b>(1.06, 1.77)</b></p>
 <p>Without the record, factual prediction: (1.53, 0.82). Misses by <b>1.07 units</b>.</p>
 <p>With the record, corrected prediction: (1.11, 1.59). Misses by <b>0.19 units</b>.</p>
-<p><b>Gain: 0.88 units closer, 82.6 percent closer.</b></p>
-<p>Across all 2000 events, mean miss: factual 0.94 units, corrected 0.32 units. Gain: 0.62 units closer, 65.9 percent closer. Median miss: 0.88 down to 0.24.</p>
-<p>Chaining, in plain counts, out of 100 tries: naive plan reaches the goal 12 times, chained plan with the record reaches it 61 times. Gain: 49 more goals reached. One-step hindsight reaches it 66 times, so chaining does not beat one-step.</p>
+<p><b>Gain: 82.6 percent closer.</b></p>
+<p>Across all 2000 events, mean miss: factual 0.94 units, corrected 0.32 units. Gain: 65.9 percent closer. Median miss: 0.88 down to 0.24, a gain of 72.7 percent closer.</p>
+<p>Chaining, out of 100 tries: naive plan reaches the goal 12 percent of the time, chained plan with the record reaches it 61 percent of the time. Gain: 49 percentage points, 408 percent more goals reached. One-step hindsight reaches it 66 percent of the time, so chaining does not beat one-step.</p>
 <h2>Run it by trust level</h2>
-<p class="small">Same 2000 events, run again as if every entry were at that level. simulator_kt.py, results_kt.json. Holding R2 on the change: WILD 0.241, CANDIDATE 0.716, MATURE fast 0.877, MATURE slow 0.698, REVOKED 0.516, REVOKED gated: cannot-answer, no wrong answer. Chaining: fast chain 61.8 percent, slow chain 23.8 percent, naive 12.6 percent, one-step 66.0 percent. Slow is worse for this specific event, because it replaces the actual disturbance with the regional mean. Fast is for this event, slow is for the domain. That is the honest KT split, not a win for slow on hindsight.</p>
+<p class="small">Same 2000 events, run again as if every entry were at that level. simulator_kt.py, results_kt.json. Holding R2 on the change: WILD 0.241, CANDIDATE 0.716, MATURE fast 0.877, MATURE slow 0.698, REVOKED 0.516, REVOKED gated: cannot-answer, no wrong answer. Chaining: fast chain 61.8 percent, slow chain 23.8 percent, naive 12.6 percent, one-step 66.0 percent. Slow is worse for this specific event, because it replaces the actual disturbance with the regional mean. Fast is for this event, slow is for the domain. That is the honest KT split, not a win for slow on hindsight. Gain from WILD to MATURE fast: 264 percent higher R2.</p>
 <p>
 <button id="runWild">Run as WILD</button>
 <button id="runCand">Run as CANDIDATE</button>
