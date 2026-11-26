@@ -2,8 +2,9 @@
 
 Date: November 25, 2026
 Seed: 20261125
-Code: simulator.py in this folder
-Interactive demo: Keeping the What-If Demo (web artifact, building)
+Code: simulator.py and simulator_kt.py in this folder
+Live demo: https://iamvolshi.github.io/lecun-counterfactual-demo/
+Repo: https://github.com/iamvolshi/lecun-counterfactual-demo
 
 ## What was proven
 
@@ -62,8 +63,40 @@ chaining is not a free win.
   A better v2 would improve the answer, not degrade it. The point is
   attribution, not that old is always better.
 
+## KT v2: run it by trust level
+
+Same 2000 events, run again as if every entry were at that level.
+Code: simulator_kt.py, numbers: results_kt.json. The current is
+partly systematic per region, d = region_current(z) + noise, sigma 0.3,
+so a slow residual (mean per cell) learns the region and a fast
+residual keeps this event's actual disturbance.
+
+Holding test, R2 on the change, n=2000 each:
+- WILD, weight 0.3: 0.241
+- CANDIDATE, weight 0.7: 0.716
+- MATURE fast, weight 1.0: 0.877
+- MATURE slow, mean per cell: 0.698
+- REVOKED, predictor v2 by mistake: 0.516
+- REVOKED gated: cannot-answer, no wrong answer
+
+Chaining test, n=2000, goal radius 0.35:
+- Fast chain: 61.8 percent reach the goal
+- Slow chain, MATURE: 23.8 percent
+- Naive, mu only: 12.6 percent
+- One-step hindsight: 66.0 percent
+
+Slow is worse for this specific event, and that is the honest KT
+split. Slow replaces the actual disturbance for this event with the
+regional mean, so it loses the exact residual the hindsight question
+needs. Fast is for this event, slow is for the domain, for new events
+in a known region. Do not claim slow beats fast on hindsight. It does
+not here, and the numbers show it.
+
 ## Files
 
 - simulator.py: the world, the model, the record, both tests, seed fixed
 - results.json: the numbers above, machine-readable
-- demo.html: removed, the interactive demo is the web artifact instead
+- simulator_kt.py: KT v2, authority variants, fast vs slow
+- results_kt.json: the KT variant numbers, machine-readable
+- index.html in the repo: interactive demo, with Run as WILD /
+  CANDIDATE / MATURE / REVOKED buttons

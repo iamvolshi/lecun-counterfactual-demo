@@ -18,6 +18,14 @@ button{padding:8px 14px;margin:6px 6px 6px 0}
 <p>By Darren Hall. A record for counterfactual world models, in reply to Balestriero, LeCun, and Varaku, arXiv:2611.24778.</p>
 <p class="small">Toy world, same dynamics as simulator.py. True dynamics: z' = z + a * s(z) + d, s = 1 + 0.4 sin(x) + 0.3 cos(y). Model mu(z,a) = z + a. Disturbance d is a hidden current, drawn per transition. Ground truth is shown here for teaching only. The agent never sees d.</p>
 <p class="small">Results from simulator.py, seed 20261125, n=2000. Holding test, R2 on the change: factual only 0.448, corrected immediately 0.913, corrected later from the record 0.913, wrong predictor version 0.657. Chaining test: chained record 60.7 percent reach the goal, naive model only 11.8 percent, one-step hindsight 65.8 percent. Full numbers in results.json, method and limits in REPORT.md. This is a toy simulation, not the paper's simulators.</p>
+<h2>Run it by trust level</h2>
+<p class="small">Same 2000 events, run again as if every entry were at that level. simulator_kt.py, results_kt.json. Holding R2 on the change: WILD 0.241, CANDIDATE 0.716, MATURE fast 0.877, MATURE slow 0.698, REVOKED 0.516, REVOKED gated: cannot-answer, no wrong answer. Chaining: fast chain 61.8 percent, slow chain 23.8 percent, naive 12.6 percent, one-step 66.0 percent. Slow is worse for this specific event, because it replaces the actual disturbance with the regional mean. Fast is for this event, slow is for the domain. That is the honest KT split, not a win for slow on hindsight.</p>
+<p>
+<button id="runWild">Run as WILD</button>
+<button id="runCand">Run as CANDIDATE</button>
+<button id="runMat">Run as MATURE</button>
+<button id="runRev">Run as REVOKED</button>
+</p>
 <canvas id="c" width="880" height="320"></canvas>
 <p>
 <button id="newEvent">New event</button>
@@ -62,6 +70,7 @@ async function newEvent(){
   draw(null);
 }
 function alt(){ return [parseFloat(document.getElementById("ax").value), parseFloat(document.getElementById("ay").value)]; }
+function muV(p, act, v){ if(v==="v2") return [p[0]+act[0]*0.5, p[1]+act[1]*0.5]; return mu(p, act); }
 function ask(mode){
   if(!rec.length){ document.getElementById("out").textContent="Press New event first."; return; }
   const ap=alt();
@@ -69,6 +78,12 @@ function ask(mode){
   let cf, label;
   if(mode==="factual"){
     cf=mu(e.z, ap); label="Factual only, no record. mu(z, a'). No disturbance, no residual.";
+  } else if(mode==="wild" || mode==="cand" || mode==="mat" || mode==="rev"){
+    const w = mode==="wild" ? 0.3 : mode==="cand" ? 0.7 : 1.0;
+    const v = mode==="rev" ? "v2" : "v1";
+    const m=muV(e.z, e.a, v), mp=muV(e.z, ap, v);
+    cf=[e.z_obs[0]+w*(mp[0]-m[0]), e.z_obs[1]+w*(mp[1]-m[1])];
+    label = mode==="wild" ? "Run as WILD, weight 0.3. Trust is low, correction is shrunk." : mode==="cand" ? "Run as CANDIDATE, weight 0.7." : mode==="mat" ? "Run as MATURE, weight 1.0. Full correction." : "Run as REVOKED, predictor v2 by mistake. This is the wrong version, watch the error grow.";
   } else {
     const m=mu(e.z, e.a), mp=mu(e.z, ap);
     cf=[e.z_obs[0]+mp[0]-m[0], e.z_obs[1]+mp[1]-m[1]];
@@ -85,6 +100,10 @@ document.getElementById("newEvent").onclick=newEvent;
 document.getElementById("askNow").onclick=()=>ask("now");
 document.getElementById("askLater").onclick=()=>ask("later");
 document.getElementById("askFactual").onclick=()=>ask("factual");
+document.getElementById("runWild").onclick=()=>ask("wild");
+document.getElementById("runCand").onclick=()=>ask("cand");
+document.getElementById("runMat").onclick=()=>ask("mat");
+document.getElementById("runRev").onclick=()=>ask("rev");
 draw(null);
 </script>
 </body>

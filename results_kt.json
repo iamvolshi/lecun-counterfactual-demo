@@ -1,0 +1,47 @@
+{
+  "holding_variants": {
+    "n": 2000,
+    "variants": {
+      "WILD": {
+        "answered": 2000,
+        "answered_rate": 1.0,
+        "R2_on_change": 0.24099378449306708
+      },
+      "CANDIDATE": {
+        "answered": 2000,
+        "answered_rate": 1.0,
+        "R2_on_change": 0.7162630682510178
+      },
+      "MATURE_FAST": {
+        "answered": 2000,
+        "answered_rate": 1.0,
+        "R2_on_change": 0.8769442379748639
+      },
+      "MATURE_SLOW": {
+        "answered": 2000,
+        "answered_rate": 1.0,
+        "R2_on_change": 0.6979076680679668
+      },
+      "REVOKED": {
+        "answered": 2000,
+        "answered_rate": 1.0,
+        "R2_on_change": 0.5159181012472076
+      },
+      "REVOKED_GATED": {
+        "answered": 0,
+        "answered_rate": 0.0,
+        "R2_on_change": null,
+        "note": "Revoked entries are not used. Query is cannot-answer, not a wrong answer."
+      }
+    }
+  },
+  "chaining_variants": {
+    "n": 2000,
+    "goal_radius": 0.35,
+    "fast_chain_WILD_CANDIDATE": 0.6175,
+    "slow_chain_MATURE": 0.238,
+    "naive_mu_only": 0.1255,
+    "one_step_hindsight": 0.6595
+  },
+  "seed": 20261125
+}
